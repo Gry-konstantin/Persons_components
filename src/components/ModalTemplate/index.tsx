@@ -3,13 +3,14 @@ import { createPortal } from 'react-dom';
 import './index.css';
 
 interface IModalTemplateProps {
+  isDisabledSubmitButton:boolean;
   isOpen: boolean;
   title: string;
   handleCloseButton: () => void
   handleSubmitButton: () => void
 };
 
-export const ModalTemplate: React.FC<IModalTemplateProps> = ({ isOpen, children, title, handleCloseButton, handleSubmitButton }) => {
+export const ModalTemplate: React.FC<IModalTemplateProps> = ({isDisabledSubmitButton, isOpen, children, title, handleCloseButton, handleSubmitButton }) => {
   if (!isOpen) return null;
 
   return createPortal(
@@ -20,7 +21,7 @@ export const ModalTemplate: React.FC<IModalTemplateProps> = ({ isOpen, children,
             <button className="btn" onClick={handleCloseButton}>
               Закрыть
             </button>
-            <button  className="btn" onClick={handleSubmitButton}>
+            <button disabled={isDisabledSubmitButton} className="btn btn_submit" onClick={handleSubmitButton}>
               Сохранить
             </button>
           </div>

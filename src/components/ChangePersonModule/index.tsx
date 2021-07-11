@@ -30,12 +30,24 @@ export const ChangePersonModule: React.FC<ModalTemplateProps> = ({isOpen, title,
             setFirstNameValue(currentPerson ? currentPerson.firstName : "")
             setLastNameValue(currentPerson ? currentPerson.lastName : "")
     }, [currentPerson])
-
-    // const isDisabledSubmitButton = () => !firstNameValue || lastNameValue || (currentPerson && firstNameValue === currentPerson.firstName)
-    // console.log(isDisabledSubmitButton)
+    // const isDisabledSubmitButton = () => {
+    //     if(firstNameValue && lastNameValue){
+    //         return false
+    //     } 
+    //     return true
+    // }
+    const isDisabledSubmitButton = () => {
+        if((currentPerson && currentPerson.firstName === firstNameValue)&&(currentPerson && currentPerson.lastName === lastNameValue)){
+            return true
+        }
+        if(firstNameValue && lastNameValue){
+            return false
+        }
+        return true
+    }
 
     return(
-        <ModalTemplate isOpen={isOpen} title={title} handleCloseButton={handleCloseButton} handleSubmitButton={handleSubmitButton}>
+        <ModalTemplate isDisabledSubmitButton = {isDisabledSubmitButton()}isOpen={isOpen} title={title} handleCloseButton={handleCloseButton} handleSubmitButton={handleSubmitButton}>
             <div className="modal__title_content">{title}</div>
             <div className='modal__content'>
                 <div className = "modal__title_inputs">
