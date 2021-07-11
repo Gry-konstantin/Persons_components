@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import api from './api/persons'
-import {ChangePersonModule} from './components/ChangePersonModule'
+import api from './api/persons';
+import {ChangePersonModule} from './components/ChangePersonModule';
 import './App.css';
-import {TableRow} from './components/TableRow'
-import {TableCell} from './components/TableCell'
-import {PersonsTable} from './components/Table'
+import {TableRow} from './components/TableRow';
+import {TableCell} from './components/TableCell';
+import {PersonsTable} from './components/Table';
 import 'react-notifications/lib/notifications.css';
+import 'react-app-polyfill/ie11';
 //@ts-ignore
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
