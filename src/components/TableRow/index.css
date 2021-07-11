@@ -1,0 +1,4 @@
+.table__row_body{
+    display: flex;
+    border-bottom: 1px solid #c5c5c5;
+}

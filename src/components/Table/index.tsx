@@ -1,7 +1,5 @@
-import { table } from "console"
-import React from "react"
-import {TableRow} from '../TableRow'
-import { TableCell } from "../TableCell"
+import React from 'react';
+import './index.css';
 
 interface IProps {
     titles:string[]
@@ -10,15 +8,15 @@ interface IProps {
 
 export const PersonsTable: React.FC<IProps> = ({children, titles}) => {
     return (
-    <table className="table">
-        <thead className= "table__header">
-            <tr className = "table__row_header">
-                {titles.map((title, index) => <th key= {`table-title${index}`}className= 'table__cell_header'>{title}</th>)}
-            </tr>
-        </thead>
-        <tbody className= 'table__tbody'>
+    <div className='table'>
+        <div className= 'table__header'>
+            <div className = 'table__row_header'>
+                {titles.map((title, index) => <div key= {`table-title${index}`}className= 'table__cell_header'>{title}</div>)}
+            </div>
+        </div>
+        <div className= 'table__tbody'>
             {children}
-        </tbody>
-    </table>
+        </div>
+    </div>
     )
 }

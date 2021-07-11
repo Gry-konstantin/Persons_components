@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { isJsxOpeningElement } from 'typescript';
+import './index.css';
 
 interface IModalTemplateProps {
   isOpen: boolean;
@@ -13,19 +13,18 @@ export const ModalTemplate: React.FC<IModalTemplateProps> = ({ isOpen, children,
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="modal-wrapper">
-      <div className="add-profile-modal_title"></div>
-        <div className="modal"> 
-            {children}
-        </div>
-        <div>
-          <button onClick={handleCloseButton}>
-            close
-          </button>
-          <button onClick={handleSubmitButton}>
-            submit
-          </button>
-        </div>
+    <div className='overlay'>
+      <div className='modal-wrapper'> 
+          {children}
+          <div className = 'modal__buttons'>
+            <button className="btn" onClick={handleCloseButton}>
+              Закрыть
+            </button>
+            <button  className="btn" onClick={handleSubmitButton}>
+              Сохранить
+            </button>
+          </div>
+      </div>
     </div>,
     document.body
   );

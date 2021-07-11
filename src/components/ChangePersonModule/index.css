@@ -1,0 +1,15 @@
+.modal__title_content{
+    background-color: gray;
+    color: #fff;
+    padding: 10px;
+    font-size: 17px;
+}
+.modal__content{padding: 40px 20px 5px;}
+.modal__title_inputs input{
+    width: 100%;
+    border-radius: 5px;
+    padding: 3px;
+    font-size: 15px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}

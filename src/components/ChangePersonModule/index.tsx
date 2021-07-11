@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { useEffect } from 'react';
 import { ModalTemplate } from '../ModalTemplate';
 import {IPerson} from '../../App'
+import './index.css'
 
 interface ModalTemplateProps  {
   isOpen: boolean;
@@ -30,15 +31,18 @@ export const ChangePersonModule: React.FC<ModalTemplateProps> = ({isOpen, title,
             setLastNameValue(currentPerson ? currentPerson.lastName : "")
     }, [currentPerson])
 
-    const isDisabledSubmitButton = () => !firstNameValue || lastNameValue || (currentPerson && firstNameValue === currentPerson.firstName)
+    // const isDisabledSubmitButton = () => !firstNameValue || lastNameValue || (currentPerson && firstNameValue === currentPerson.firstName)
+    // console.log(isDisabledSubmitButton)
 
     return(
         <ModalTemplate isOpen={isOpen} title={title} handleCloseButton={handleCloseButton} handleSubmitButton={handleSubmitButton}>
-        <div className='add-profile-modal'>
-            <div className="add-profile-modal_title">{title}</div>
-            <input onChange={handleFirstNameField} value={firstNameValue}/>
-            <input onChange={handleLastNameField} value={lastNameValue}/>
-        </div>
+            <div className="modal__title_content">{title}</div>
+            <div className='modal__content'>
+                <div className = "modal__title_inputs">
+                    <input onChange={handleFirstNameField} value={firstNameValue}/>
+                    <input onChange={handleLastNameField} value={lastNameValue}/>
+                </div>
+            </div>
         </ModalTemplate>
     )
 };

@@ -1,0 +1,23 @@
+.table{
+    background: #fff; 
+    color: #000; 
+    border-spacing: 1px;
+    width:100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    border: 1px solid #c5c5c5;
+}
+.table__header{
+    border-bottom: 1px solid #c5c5c5;
+}
+.table__cell_header{
+    width: 33%;
+    padding:10px 20px;
+    box-sizing: border-box;
+
+}
+.table__row_header{
+    background-color: #f1f1f1;
+    display: flex;
+    font-weight: 800;
+}

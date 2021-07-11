@@ -1,0 +1,26 @@
+.table__cell_body{
+    /* border: 1px solid #333;  */
+    padding: 10px 20px; 
+    width: 33%;
+}
+.table__cell_body button:nth-child(1){
+    margin-right: 10px;
+}
+.table__cell_body button{
+    padding: 1px 5px;
+    font-size: 20px;
+}
+.table__cell_body .btn-edit{
+    background-color: #ffdfb2;
+}
+.table__cell_body .btn-delete{
+    background-color: rgb(255, 191, 191);
+}
+@media screen and (max-width: 370px) {
+    .table__cell_body button:nth-child(1){
+        margin-right: 2px;
+    }
+    .table__cell_body{
+        padding: 10px 15px;
+    } 
+}

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import api from "./api/persons"
+import api from './api/persons'
 import {ChangePersonModule} from './components/ChangePersonModule'
 import './App.css';
 import {TableRow} from './components/TableRow'
@@ -21,15 +21,15 @@ const App:React.FC = () =>   {
   const [currentEditPersonIndex, setCurrentEditPersonIndex] = useState<number>(-1)
   //Retrieve persons
   const retrieveContacts = async () => {
-    const response = await api.get("/persons");
+    const response = await api.get('/persons');
     return response.data;
   }
   const getChangePersonModuleTitle = ()=>{
     if (isOpenAddModal || currentEditPersonIndex !== -1){
       if(isOpenAddModal){
-        return 'Создание'
+        return 'Создание сотрудника'
       }
-      return 'Редактирование'
+      return 'Редактирование сотрудника'
     }else{
       return ''
     }
@@ -55,7 +55,6 @@ const App:React.FC = () =>   {
       person.id = (new Date).getTime()
       const response = await api.post('/persons', person)
       renderNotification(response.status)
-      console.log(response.status)
       personsCopy.push(person)
     } else{
       const response = await api.put(`/persons/${person.id}`, person)
@@ -89,15 +88,15 @@ const App:React.FC = () =>   {
   },[])
 
   return (
-    <div className="App">
+    <div className='App'>
       <PersonsTable titles = {['Имя', 'Фамилия']}>
         {persons.map((item, index) =>   
           <TableRow key = {`table-title${index}`}>
-            <TableCell>firstName: {item.firstName}</TableCell> 
-            <TableCell>lastName: {item.lastName}</TableCell>
+            <TableCell>{item.firstName}</TableCell> 
+            <TableCell>{item.lastName}</TableCell>
             <TableCell>
-              <button onClick = {() => setCurrentEditPersonIndex(index)}>edit</button>
-              <button onClick = {() => removePersonHandler(item.id)}>delete</button>
+              <button className = 'btn-edit' onClick = {() => setCurrentEditPersonIndex(index)}>&#9998;</button>{/* Content button :✎*/}
+              <button className = 'btn-delete' onClick = {() => removePersonHandler(item.id)}>&#10006;</button>{/* Content button :✖*/}
             </TableCell>
           </TableRow>
         )}
@@ -107,13 +106,15 @@ const App:React.FC = () =>   {
       onSubmit ={changePerson} 
       handleCloseButton={handleChangePersonsModalCloseButton}
        currentPerson = {persons[currentEditPersonIndex]}/>
-      <button
-        type = 'button'
-        className = ''
-        onClick = {() => setIsOpenAddModal(true)}
-      >
-        add person
-      </button>
+      <div className = 'container'>
+        <button
+          type = 'button'
+          className = 'btn btn-addPerson'
+          onClick = {() => setIsOpenAddModal(true)}
+        >
+          Добавить сотрудника
+        </button>
+      </div>
       <NotificationContainer/>
     </div>
   );
