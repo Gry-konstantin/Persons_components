@@ -1,26 +1,15 @@
 import React, {useState} from 'react';
 import { useEffect } from 'react';
 import { ModalTemplate } from '../ModalTemplate';
+import {IPerson} from '../../App'
 
 interface ModalTemplateProps  {
   isOpen: boolean;
   title: string;
-  onSubmit: (person:any) => void
-  currentPerson?: any 
+  onSubmit: (person:IPerson) => void
+  currentPerson?: IPerson 
   handleCloseButton: () => void
 };
-
-// const axios = require('axios');
-// axios.post('http://localhost:3000/users', {
-//     id: 6,
-//     first_name: 'Fred',
-//     last_name: 'Blair',
-//     email: 'freddyb34@gmail.com'
-// }).then(resp => {
-//     console.log(resp.data);
-// }).catch(error => {
-//     console.log(error);
-// });   
 export const ChangePersonModule: React.FC<ModalTemplateProps> = ({isOpen, title, onSubmit, currentPerson, handleCloseButton}) => {
     const [firstNameValue, setFirstNameValue] = useState<string>(currentPerson ? currentPerson.firstName : "")
     const [lastNameValue, setLastNameValue] = useState<string>(currentPerson ? currentPerson.lastName : "")
