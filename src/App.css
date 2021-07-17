@@ -21,3 +21,6 @@
 .btn-addPerson{
   margin-top: 10px;
 }
+.btn:disabled { 
+  opacity: 0.5;
+}

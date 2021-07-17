@@ -1,14 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import api from './api/persons';
+import api from './api';
 import {ChangePersonModule} from './components/ChangePersonModule';
 import './App.css';
 import {TableRow} from './components/TableRow';
 import {TableCell} from './components/TableCell';
 import {PersonsTable} from './components/Table';
-import 'react-notifications/lib/notifications.css';
-import 'react-app-polyfill/ie11';
-//@ts-ignore
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export interface IPerson  {
   id:number;
@@ -20,10 +18,21 @@ const App:React.FC = () =>   {
   const [persons, setPersons] = useState<IPerson[]>([])
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false)
   const [currentEditPersonIndex, setCurrentEditPersonIndex] = useState<number>(-1)
-  //Retrieve persons
-  const retrieveContacts = async () => {
-    const response = await api.get('/persons');
-    return response.data;
+  const [isDisabledAddButton, SetIsDisabledAddButton] = useState<boolean>(true)
+  const renderNotification = (status:number) =>{
+    switch (status) {
+      case 200:
+      case 201:
+        toast.success('Успешное действие');
+        break
+      case 400:
+      case 401:
+        toast.error('Неверный запрос');
+        break
+      case 500:
+        toast.error('Cерверная ошибка');
+        break
+    }
   }
   const getChangePersonModuleTitle = ()=>{
     if (isOpenAddModal || currentEditPersonIndex !== -1){
@@ -35,25 +44,12 @@ const App:React.FC = () =>   {
       return ''
     }
   }
-  const renderNotification = (status:number) =>{
-    switch (status) {
-      case 200:
-      case 201:
-        NotificationManager.success('Success message', 'Успешно');
-        break
-      case 400:
-      case 401:
-        NotificationManager.error('Success message', 'Неверный запрос');
-        break
-      case 500:
-        NotificationManager.error('Error message', 'Cерверная ошибка');
-        break
-    }
-  }
   const changePerson = async (person:IPerson) =>{
     const personsCopy = [...persons]
     if(person.id === -1) {
-      person.id = (new Date).getTime()
+      //Добавил переменную для id
+      const currentId = (new Date()).getTime();
+      person.id = currentId;
       const response = await api.post('/persons', person)
       renderNotification(response.status)
       personsCopy.push(person)
@@ -82,6 +78,30 @@ const App:React.FC = () =>   {
   }
   useEffect(()=>{
     const getAllPersons = async () => {
+
+      const retrieveContacts = async () => {
+        //Обработка запроса
+        toast.info('Проверка соединения с сервером');
+    
+        const response = await api.get('/persons')
+    
+        .then(response => { 
+          SetIsDisabledAddButton(false)
+          toast.success('Соединение с сервером установлено');
+           return response.data
+        }) 
+        .catch(err => { 
+          if (err.response) { 
+            renderNotification(err.response)
+          } else if (err.request) { 
+            toast.error('Отсутствует соединение с сервером');
+          } else { 
+            toast.error('Другая ошибка');
+          } 
+        })
+        return response;
+      }
+
       const allPersons = await retrieveContacts();
       if (allPersons) setPersons(allPersons)
     }
@@ -103,20 +123,24 @@ const App:React.FC = () =>   {
         )}
       </PersonsTable>
       <ChangePersonModule isOpen={isOpenAddModal || currentEditPersonIndex !== -1} 
-      title={getChangePersonModuleTitle()} 
-      onSubmit ={changePerson} 
-      handleCloseButton={handleChangePersonsModalCloseButton}
-       currentPerson = {persons[currentEditPersonIndex]}/>
+        title={getChangePersonModuleTitle()} 
+        onSubmit ={changePerson} 
+        handleCloseButton={handleChangePersonsModalCloseButton}
+        currentPerson = {persons[currentEditPersonIndex]}
+       />
       <div className = 'container'>
         <button
           type = 'button'
           className = 'btn btn-addPerson'
           onClick = {() => setIsOpenAddModal(true)}
+          disabled = {isDisabledAddButton}
         >
           Добавить сотрудника
         </button>
       </div>
-      <NotificationContainer/>
+      <ToastContainer
+        autoClose={3000}
+        />
     </div>
   );
 }

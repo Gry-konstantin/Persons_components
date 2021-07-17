@@ -25,6 +25,3 @@
     display: flex;
     justify-content: space-between;
   }
-  .modal__buttons button.btn_submit:disabled { 
-    opacity: 0.5;
-  }
