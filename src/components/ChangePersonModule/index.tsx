@@ -14,10 +14,10 @@ interface IModalTemplateProps  {
 export const ChangePersonModule: React.FC<IModalTemplateProps> = ({isOpen, title, onSubmit, currentPerson, handleCloseButton}) => {
     const [firstNameValue, setFirstNameValue] = useState<string>(currentPerson ? currentPerson.firstName : '')
     const [lastNameValue, setLastNameValue] = useState<string>(currentPerson ? currentPerson.lastName : '')
-    //Добавил валидацию полей input (19,20,25,26)
+    //Добавил валидацию полей input (19,20)
     const validateNameField = (str:string) => {
         let formatStr = str.replace(/[^a-zA-ZА-Яа-яЁё]/gi, '')
-        return formatStr[0].toUpperCase() + formatStr.slice(1)
+        return formatStr[0] && formatStr[0].toUpperCase() + formatStr.slice(1)
     }
     const handleNameField = (event:React.ChangeEvent<HTMLInputElement>) => {
         const formatValue = validateNameField(event.target.value)
@@ -35,6 +35,7 @@ export const ChangePersonModule: React.FC<IModalTemplateProps> = ({isOpen, title
             setFirstNameValue('')
             setLastNameValue('')
     }
+    
     useEffect(() => {   
             setFirstNameValue(currentPerson ? currentPerson.firstName : '')
             setLastNameValue(currentPerson ? currentPerson.lastName : '')
