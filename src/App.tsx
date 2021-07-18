@@ -32,6 +32,7 @@ const App:React.FC = () =>   {
       case 500:
         toast.error('Cерверная ошибка');
         break
+        default: toast.error('Соединение с сервором отсутствует')
     }
   }
   const getChangePersonModuleTitle = ()=>{
@@ -40,27 +41,26 @@ const App:React.FC = () =>   {
         return 'Создание сотрудника'
       }
       return 'Редактирование сотрудника'
-    }else{
-      return ''
     }
+      return ''
   }
   const changePerson = async (person:IPerson) =>{
     const personsCopy = [...persons]
     if(person.id === -1) {
+      const personCopy = {...person}
       //Добавил переменную для id
-      const currentId = (new Date()).getTime();
-      person.id = currentId;
-      const response = await api.post('/persons', person)
+      const currentId = new Date().getTime();
+      personCopy.id = currentId;
+      const response = await api.post('/persons', personCopy)
       renderNotification(response.status)
-      personsCopy.push(person)
+      personsCopy.push(personCopy)
     } else{
       const response = await api.put(`/persons/${person.id}`, person)
       renderNotification(response.status)
       const personIndex = persons.findIndex(currentPerson => currentPerson.id === person.id)
       personsCopy.splice(personIndex, 1, person)
     }
-    if(isOpenAddModal) setIsOpenAddModal(false)
-    if(currentEditPersonIndex !== -1)setCurrentEditPersonIndex(-1)
+    handleChangePersonsModalCloseButton()
     setPersons(personsCopy)
   }
 
@@ -76,36 +76,18 @@ const App:React.FC = () =>   {
     personsCopy.splice(deletetedPersonIndex, 1)
     setPersons(personsCopy)
   }
+
   useEffect(()=>{
-    const getAllPersons = async () => {
-
-      const retrieveContacts = async () => {
-        //Обработка запроса
-        toast.info('Проверка соединения с сервером');
-    
-        const response = await api.get('/persons')
-    
-        .then(response => { 
-          SetIsDisabledAddButton(false)
-          toast.success('Соединение с сервером установлено');
-           return response.data
-        }) 
-        .catch(err => { 
-          if (err.response) { 
-            renderNotification(err.response)
-          } else if (err.request) { 
-            toast.error('Отсутствует соединение с сервером');
-          } else { 
-            toast.error('Другая ошибка');
-          } 
-        })
-        return response;
-      }
-
-      const allPersons = await retrieveContacts();
-      if (allPersons) setPersons(allPersons)
-    }
-    getAllPersons();
+    api.get('/persons')
+    .then(response => { 
+      SetIsDisabledAddButton(false)
+        const allPersons = response.data
+        setPersons(allPersons)
+        // return response.data
+    }) 
+    .catch(err => { 
+      renderNotification(err.response || -1)
+    })
   },[])
 
   return (

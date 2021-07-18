@@ -15,39 +15,33 @@ export const ChangePersonModule: React.FC<IModalTemplateProps> = ({isOpen, title
     const [firstNameValue, setFirstNameValue] = useState<string>(currentPerson ? currentPerson.firstName : '')
     const [lastNameValue, setLastNameValue] = useState<string>(currentPerson ? currentPerson.lastName : '')
     //Добавил валидацию полей input (19,20,25,26)
-    const handleFirstNameField = (event:React.ChangeEvent<HTMLInputElement>) => {
-        event.target.value = event.target.value[0].toUpperCase() + event.target.value.slice(1);
-        event.target.value = event.target.value.replace(/[^a-zA-ZА-Яа-яЁё]/gi, '')
-        setFirstNameValue(event.target.value)
+    const validateNameField = (str:string) => {
+        let formatStr = str.replace(/[^a-zA-ZА-Яа-яЁё]/gi, '')
+        return formatStr[0].toUpperCase() + formatStr.slice(1)
     }
-
-    const handleLastNameField = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.target.value = event.target.value[0].toUpperCase() + event.target.value.slice(1);
-        event.target.value = event.target.value.replace(/[^a-zA-ZА-Яа-яЁё]/gi, '')
-        setLastNameValue(event.target.value)
+    const handleNameField = (event:React.ChangeEvent<HTMLInputElement>) => {
+        const formatValue = validateNameField(event.target.value)
+        if (event.target.name === 'lastName') {
+            setLastNameValue(formatValue)
+        }else{
+            setFirstNameValue(formatValue) 
+        }
     }
-
     const handleSubmitButton = () => {
         if(currentPerson) onSubmit({...currentPerson, firstName: firstNameValue, lastName: lastNameValue})
-        else {
+        else 
             onSubmit({id: -1, firstName: firstNameValue, lastName: lastNameValue})
             // Очистка предыдущих значений добавленного сотрудника 
             setFirstNameValue('')
             setLastNameValue('')
-        }
     }
     useEffect(() => {   
             setFirstNameValue(currentPerson ? currentPerson.firstName : '')
             setLastNameValue(currentPerson ? currentPerson.lastName : '')
     }, [currentPerson])
+
     const isDisabledSubmitButton = () => {
-        if((currentPerson && currentPerson.firstName === firstNameValue)&&(currentPerson && currentPerson.lastName === lastNameValue)){
-            return true
-        }
-        if(firstNameValue && lastNameValue){
-            return false
-        }
-        return true
+        return !(firstNameValue && lastNameValue) || Boolean(currentPerson && currentPerson.firstName === firstNameValue &&  currentPerson.lastName === lastNameValue)
     }
 
     return(
@@ -55,8 +49,8 @@ export const ChangePersonModule: React.FC<IModalTemplateProps> = ({isOpen, title
             <div className='modal__title_content'>{title}</div>
             <div className='modal__content'>
                 <div className = 'modal__title_inputs'>
-                    <input onChange={handleFirstNameField} value={firstNameValue} minLength = {3} maxLength = {12}/>
-                    <input onChange={handleLastNameField} value={lastNameValue} minLength = {3} maxLength = {16}/>
+                    <input onChange={handleNameField} name = 'firstName' value={firstNameValue} minLength = {3} maxLength = {12}/>
+                    <input onChange={handleNameField} name = 'lastName' value={lastNameValue} minLength = {3} maxLength = {16}/>
                 </div>
             </div>
         </ModalTemplate>
