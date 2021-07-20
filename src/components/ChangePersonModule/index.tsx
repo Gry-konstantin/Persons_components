@@ -9,15 +9,15 @@ interface IModalTemplateProps  {
   title: string;
   onSubmit: (person:IPerson) => void
   currentPerson?: IPerson 
-  handleCloseButton: () => void
+  onClose: () => void
 };
-export const ChangePersonModule: React.FC<IModalTemplateProps> = ({isOpen, title, onSubmit, currentPerson, handleCloseButton}) => {
+export const ChangePersonModule: React.FC<IModalTemplateProps> = ({isOpen, title, onSubmit, currentPerson, onClose}) => {
     const [firstNameValue, setFirstNameValue] = useState<string>(currentPerson ? currentPerson.firstName : '')
     const [lastNameValue, setLastNameValue] = useState<string>(currentPerson ? currentPerson.lastName : '')
     //Добавил валидацию полей input (19,20)
     const validateNameField = (str:string) => {
         let formatStr = str.replace(/[^a-zA-ZА-Яа-яЁё]/gi, '')
-        return formatStr[0] && formatStr[0].toUpperCase() + formatStr.slice(1)
+        return formatStr && formatStr[0].toUpperCase() + formatStr.slice(1)
     }
     const handleNameField = (event:React.ChangeEvent<HTMLInputElement>) => {
         const formatValue = validateNameField(event.target.value)
@@ -27,13 +27,20 @@ export const ChangePersonModule: React.FC<IModalTemplateProps> = ({isOpen, title
             setFirstNameValue(formatValue) 
         }
     }
+    const clearInputs = () => {
+        setFirstNameValue('')
+        setLastNameValue('')
+    }
     const handleSubmitButton = () => {
         if(currentPerson) onSubmit({...currentPerson, firstName: firstNameValue, lastName: lastNameValue})
         else 
             onSubmit({id: -1, firstName: firstNameValue, lastName: lastNameValue})
             // Очистка предыдущих значений добавленного сотрудника 
-            setFirstNameValue('')
-            setLastNameValue('')
+            clearInputs()
+    }
+    const handleCloseButton = () => {
+        onClose()
+        clearInputs()
     }
     
     useEffect(() => {   

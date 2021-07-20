@@ -46,35 +46,44 @@ const App:React.FC = () =>   {
   }
   const changePerson = async (person:IPerson) =>{
     const personsCopy = [...persons]
-    if(person.id === -1) {
-      const personCopy = {...person}
-      //Добавил переменную для id
-      const currentId = new Date().getTime();
-      personCopy.id = currentId;
-      const response = await api.post('/persons', personCopy)
-      renderNotification(response.status)
-      personsCopy.push(personCopy)
-    } else{
-      const response = await api.put(`/persons/${person.id}`, person)
-      renderNotification(response.status)
-      const personIndex = persons.findIndex(currentPerson => currentPerson.id === person.id)
-      personsCopy.splice(personIndex, 1, person)
-    }
     handleChangePersonsModalCloseButton()
-    setPersons(personsCopy)
+    try {
+      if(person.id === -1) {
+        const personCopy = {...person}
+        //Добавил переменную для id
+        const currentId = new Date().getTime();
+        personCopy.id = currentId;
+        const response = await api.post('/persons', personCopy)
+        renderNotification(response.status)
+        personsCopy.push(personCopy)
+      } else{
+        const response = await api.put(`/persons/${person.id}`, person)
+        renderNotification(response.status)
+        const personIndex = persons.findIndex(currentPerson => currentPerson.id === person.id)
+        personsCopy.splice(personIndex, 1, person)
+      }
+      setPersons(personsCopy)
+    }
+    catch(error){
+      renderNotification(error.response || -1)
+    }
   }
-
   const handleChangePersonsModalCloseButton = () => {
     if(isOpenAddModal) setIsOpenAddModal(false)
     if(currentEditPersonIndex !== -1)setCurrentEditPersonIndex(-1)
   }
   const removePersonHandler = async (id:number) => {
-    const response = await api.delete(`/persons/${id}`)
-    renderNotification(response.status)
-    const personsCopy = [...persons]
-    const deletetedPersonIndex = personsCopy.findIndex((currntPerson) => currntPerson.id === id)
-    personsCopy.splice(deletetedPersonIndex, 1)
-    setPersons(personsCopy)
+    try{
+      const response = await api.delete(`/persons/${id}`)
+      renderNotification(response.status)
+      const personsCopy = [...persons]
+      const deletetedPersonIndex = personsCopy.findIndex((currntPerson) => currntPerson.id === id)
+      personsCopy.splice(deletetedPersonIndex, 1)
+      setPersons(personsCopy)
+    }
+    catch(error){
+      renderNotification(error.response || -1)
+    }
   }
 
   useEffect(()=>{
@@ -107,7 +116,7 @@ const App:React.FC = () =>   {
       <ChangePersonModule isOpen={isOpenAddModal || currentEditPersonIndex !== -1} 
         title={getChangePersonModuleTitle()} 
         onSubmit ={changePerson} 
-        handleCloseButton={handleChangePersonsModalCloseButton}
+        onClose = {handleChangePersonsModalCloseButton}
         currentPerson = {persons[currentEditPersonIndex]}
        />
       <div className = 'container'>
